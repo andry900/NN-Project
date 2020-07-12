@@ -205,7 +205,7 @@ def main():
     global matSource, matTarget
     print(opt)
     # path = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
-    path = '/Users/andre/Downloads/Images_NN/' # path to the data, change to your own path
+    path = './Dataset/' # path to the data, change to your own path
     scan = ScanFile(path, postfix='_mr.nii') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 
