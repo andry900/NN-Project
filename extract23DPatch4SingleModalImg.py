@@ -81,16 +81,16 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
     trainFA = np.zeros([estNum, 1, dFA[0], dFA[1], dFA[2]], dtype=np.float16)
     trainSeg = np.zeros([estNum, 1, dSeg[0], dSeg[1], dSeg[2]], dtype=np.float16)
 
-    print 'trainFA shape, ', trainFA.shape
+    print('trainFA shape, ', trainFA.shape)
     # to padding for input
-    margin1 = (dFA[0] - dSeg[0]) / 2
-    margin2 = (dFA[1] - dSeg[1]) / 2
-    margin3 = (dFA[2] - dSeg[2]) / 2
+    margin1 = int((dFA[0] - dSeg[0]) / 2)
+    margin2 = int((dFA[1] - dSeg[1]) / 2)
+    margin3 = int((dFA[2] - dSeg[2]) / 2)
     cubicCnt = 0
     marginD = [margin1, margin2, margin3]
-    print 'matFA shape is ', matFA.shape
-    matFAOut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]], dtype=np.float16)
-    print 'matFAOut shape is ', matFAOut.shape
+    print('matFA shape is ', matFA.shape)
+    matFAOut = np.zeros([int(row + 2 * marginD[0]), int(col + 2 * marginD[1]), int(leng + 2 * marginD[2])], dtype=np.float16)
+    print('matFAOut shape is ', matFAOut.shape)
     matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA
 
     matSegOut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]], dtype=np.float16)
@@ -202,10 +202,11 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
 
 
 def main():
-    print opt
-    path = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
-    path = '/shenlab/lab_stor5/dongnie/brain_mr2ct/original_data/' # path to the data, change to your own path
-    scan = ScanFile(path, postfix='_mr.hdr') # the specify item for your files, change to your own style
+    global matSource, matTarget
+    print(opt)
+    # path = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
+    path = '/Users/andre/Downloads/Images_NN/' # path to the data, change to your own path
+    scan = ScanFile(path, postfix='_mr.nii') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 
     # for input
@@ -224,10 +225,10 @@ def main():
 
     for filename in filenames:
 
-        print 'source filename: ', filename
+        print('source filename: ', filename)
 
         source_fn = filename
-        target_fn = filename.replace('_mr.hdr', '_ct.hdr')
+        target_fn = filename.replace('_mr.nii', '_ct.nii')
 
         imgOrg = sitk.ReadImage(source_fn)
         sourcenp = sitk.GetArrayFromImage(imgOrg)
@@ -241,22 +242,22 @@ def main():
 
         if opt.how2normalize == 1:
             maxV, minV = np.percentile(sourcenp, [99, 1])
-            print 'maxV,', maxV, ' minV, ', minV
+            print('maxV,', maxV, ' minV, ', minV)
             sourcenp = (sourcenp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(targetnp)
+            print('unique value: ', np.unique(targetnp))
 
         # for training data in pelvicSeg
         if opt.how2normalize == 2:
             maxV, minV = np.percentile(sourcenp, [99, 1])
-            print 'maxV,', maxV, ' minV, ', minV
+            print('maxV,', maxV, ' minV, ', minV)
             sourcenp = (sourcenp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(targetnp)
+            print('unique value: ', np.unique(targetnp))
 
         # for training data in pelvicSegRegH5
         if opt.how2normalize == 3:
             std = np.std(sourcenp)
             sourcenp = (sourcenp - mu) / std
-            print 'maxV,', np.ndarray.max(sourcenp), ' minV, ', np.ndarray.min(sourcenp)
+            print('maxV,', np.ndarray.max(sourcenp), ' minV, ', np.ndarray.min(sourcenp))
 
         if opt.how2normalize == 4:
             maxSource = 149.366742
@@ -283,7 +284,7 @@ def main():
             meanTarget = -601.1929
             stdTarget = 475.034
 
-            print 'target, max: ', np.amax(targetnp), ' target, min: ', np.amin(targetnp)
+            print('target, max: ', np.amax(targetnp), ' target, min: ', np.amin(targetnp))
 
             # matSource = (sourcenp - meanSource) / (stdSource)
             matSource = sourcenp
@@ -292,14 +293,15 @@ def main():
         if opt.how2normalize == 6:
             maxPercentSource, minPercentSource = np.percentile(sourcenp, [99.5, 0])
             maxPercentTarget, minPercentTarget = np.percentile(targetnp, [99.5, 0])
-            print 'maxPercentSource: ', maxPercentSource, ' minPercentSource: ', minPercentSource, ' maxPercentTarget: ', maxPercentTarget, 'minPercentTarget: ', minPercentTarget
+            print('maxPercentSource: ', maxPercentSource, ' minPercentSource: ', minPercentSource,
+                  ' maxPercentTarget: ', maxPercentTarget, 'minPercentTarget: ', minPercentTarget)
 
             matSource = (sourcenp - minPercentSource) / (maxPercentSource - minPercentSource) #input
             #output, use input's statistical (if there is big difference between input and output, you can find a simple relation between input and output and then include this relation to normalize output with input's statistical)
-            matTarget = (targetnp - minPercentSource) / (maxPercentSource - minPercentSource) 
+            matTarget = (targetnp - minPercentSource) / (maxPercentSource - minPercentSource)
 
-            print 'maxSource: ', np.amax(matSource),  ' maxTarget: ', np.amax(matTarget)
-            print 'minSource: ', np.amin(matSource),  ' minTarget: ', np.amin(matTarget)
+            print('maxSource: ', np.amax(matSource), ' maxTarget: ', np.amax(matTarget))
+            print('minSource: ', np.amin(matSource), ' minTarget: ', np.amin(matTarget))
 
         # maxV, minV = np.percentile(mrimg, [99.5, 0])
         #         print 'maxV is: ',np.ndarray.max(mrimg)
@@ -344,17 +346,17 @@ def main():
         # print 'spet: maxV,',np.ndarray.max(matSPET),' minV, ',np.ndarray.min(matSPET), ' meanV: ',np.mean(matSPET), ' stdV: ', np.std(matSPET)
 
         sdir = filename.split('/')
-        print 'sdir is, ', sdir, 'and s6 is, ', sdir[len(sdir)-1]
+        print('sdir is, ', sdir, 'and s6 is, ', sdir[len(sdir) - 1])
         lpet_fn = sdir[len(sdir)-1]
         words = lpet_fn.split('_')
-        print 'words are, ', words
+        print('words are, ', words)
         # ind = int(words[0])
 
         fileID = words[0]
         rate = 1
         cubicCnt = extractPatch4OneSubject(matSource, matTarget, maskimg, fileID, dSeg, step, rate)
         # cubicCnt = extractPatch4OneSubject(mrnp, matCT, hpetnp, maskimg, fileID,dSeg,step,rate)
-        print '# of patches is ', cubicCnt
+        print('# of patches is ', cubicCnt)
 
         # reverse along the 1st dimension
         rmatSource = matSource[matSource.shape[0] - 1::-1, :, :]
@@ -363,7 +365,7 @@ def main():
         rmaskimg = maskimg[maskimg.shape[0] - 1::-1, :, :]
         fileID = words[0] + 'r'
         cubicCnt = extractPatch4OneSubject(rmatSource, rmatTarget, rmaskimg, fileID, dSeg, step, rate)
-        print '# of patches is ', cubicCnt
+        print('# of patches is ', cubicCnt)
 
 
 if __name__ == '__main__':
