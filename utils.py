@@ -18,20 +18,20 @@ import gauss
 #Dong add keys here
 def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dataCT'):
     #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)#every file  is a hdf5 patient
     while True:
         
         for idx,namepatient in enumerate(patients):
-            print namepatient            
+            print (namepatient)            
             f=h5py.File(os.path.join(path_patients,namepatient),'r')
             #dataMRptr=f['dataMR']
             dataMRptr=f[inputKey]
-            dataMR=dataMRptr.value
+            dataMR=dataMRptr[()]
             
             #dataCTptr=f['dataCT']
             dataCTptr=f[outputKey]
-            dataCT=dataCTptr.value
+            dataCT=dataCTptr[()]
 
             dataMR=np.squeeze(dataMR)
             dataCT=np.squeeze(dataCT)
@@ -73,8 +73,8 @@ def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dat
             X=X[inds,...]
             y=y[inds,...]
             
-            print 'y shape ', y.shape                   
-            for i_batch in xrange(int(X.shape[0]/batchsize)):
+            print ('y shape ', y.shape)                   
+            for i_batch in range(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
 
 
@@ -82,12 +82,12 @@ def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dat
 # We extract items from one whole Epoch: traverse the data thoroughly
 def Generator_2D_slices_OneEpoch(path_patients, batchsize, inputKey='dataMR', outputKey='dataCT'):
     # path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)  # every file  is a hdf5 patient
     # while True:
     #
     for idx, namepatient in enumerate(patients):
-        print namepatient
+        print (namepatient)
         f = h5py.File(os.path.join(path_patients, namepatient), 'r')
         # dataMRptr=f['dataMR']
         dataMRptr = f[inputKey]
@@ -137,7 +137,7 @@ def Generator_2D_slices_OneEpoch(path_patients, batchsize, inputKey='dataMR', ou
         X = X[inds, ...]
         y = y[inds, ...]
 
-        print 'y shape ', y.shape
+        print ('y shape ', y.shape)
         for i_batch in xrange(int(X.shape[0] / batchsize)):
             yield (X[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
                    y[i_batch * batchsize:(i_batch + 1) * batchsize, ...])
@@ -147,12 +147,12 @@ def Generator_2D_slices_OneEpoch(path_patients, batchsize, inputKey='dataMR', ou
 #Dong add keys here
 def Generator_2D_slicesV1(path_patients,batchsize,inputKey='dataMR',segKey='dataCT', contourKey='dataContour'):
     #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)#every file  is a hdf5 patient
     while True:
         
         for idx,namepatient in enumerate(patients):
-            print namepatient            
+            print (namepatient)            
             f=h5py.File(os.path.join(path_patients,namepatient),'r')
             #dataMRptr=f['dataMR']
             dataMRptr=f[inputKey]
@@ -170,7 +170,7 @@ def Generator_2D_slicesV1(path_patients,batchsize,inputKey='dataMR',segKey='data
             dataContour=np.squeeze(dataContour)
 
             #print 'mr shape h5 ',dataMR.shape#B,H,W,C
-            print 'ct shape h5 ',dataCT.shape#B,H,W
+            print ('ct shape h5 ',dataCT.shape)#B,H,W
             
             shapedata=dataMR.shape
             #Shuffle data
@@ -213,9 +213,9 @@ def Generator_2D_slicesV1(path_patients,batchsize,inputKey='dataMR',segKey='data
             y=y[inds,...]
             y1=y1[inds,...]
             
-            print 'y shape ', y.shape                   
-            print 'X shape ', X.shape                   
-            print 'y1 shape ', y1.shape                   
+            print ('y shape ', y.shape)                   
+            print ('X shape ', X.shape)                   
+            print ('y1 shape ', y1.shape)                   
             for i_batch in xrange(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...],y1[i_batch*batchsize:(i_batch+1)*batchsize,...])
 
@@ -224,12 +224,12 @@ def Generator_2D_slicesV1(path_patients,batchsize,inputKey='dataMR',segKey='data
 # We extract items from one whole Epoch: traverse the data thoroughly
 def Generator_2D_slicesV1_OneEpoch(path_patients, batchsize, inputKey='dataMR', segKey='dataCT', contourKey='dataContour'):
     # path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)  # every file  is a hdf5 patient
     # # while True:
     #
     for idx, namepatient in enumerate(patients):
-        print namepatient
+        print (namepatient)
         f = h5py.File(os.path.join(path_patients, namepatient), 'r')
         # dataMRptr=f['dataMR']
         dataMRptr = f[inputKey]
@@ -247,7 +247,7 @@ def Generator_2D_slicesV1_OneEpoch(path_patients, batchsize, inputKey='dataMR', 
         dataContour = np.squeeze(dataContour)
 
         # print 'mr shape h5 ',dataMR.shape#B,H,W,C
-        print 'ct shape h5 ', dataCT.shape  # B,H,W
+        print ('ct shape h5 ', dataCT.shape)  # B,H,W
 
         shapedata = dataMR.shape
         # Shuffle data
@@ -290,9 +290,9 @@ def Generator_2D_slicesV1_OneEpoch(path_patients, batchsize, inputKey='dataMR', 
         y = y[inds, ...]
         y1 = y1[inds, ...]
 
-        print 'y shape ', y.shape
-        print 'X shape ', X.shape
-        print 'y1 shape ', y1.shape
+        print ('y shape ', y.shape)
+        print ('X shape ', X.shape)
+        print ('y1 shape ', y1.shape)
         for i_batch in xrange(int(X.shape[0] / batchsize)):
             yield (X[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
                    y[i_batch * batchsize:(i_batch + 1) * batchsize, ...],
@@ -310,13 +310,13 @@ Output:
 '''
 def Generator_2D_slices_variousKeys(path_patients,batchsize, *keys):
     #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)#every file  is a hdf5 patient
     numOfKeys = len(keys)
     while True:
         
         for idx,namepatient in enumerate(patients):
-            print namepatient            
+            print (namepatient)            
             f = h5py.File(os.path.join(path_patients,namepatient))
             
             data0 = f[keys[0]].value
@@ -372,7 +372,7 @@ def Generator_2D_slices_variousKeys(path_patients,batchsize, *keys):
             X=X[inds,...]
 #             y=y[inds,...]
             
-            print 'X shape ', X.shape                   
+            print ('X shape ', X.shape)                   
             for i_batch in xrange(int(X.shape[0]/batchsize)):
 #                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...,keyInd],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
                 yield ([ X[i_batch*batchsize:(i_batch+1)*batchsize,...,keyInd] for keyInd in range(0,numOfKeys)])
@@ -382,12 +382,12 @@ def Generator_2D_slices_variousKeys(path_patients,batchsize, *keys):
 
 def Generator_3D_patches(path_patients,batchsize, inputKey='dataMR',outputKey='dataCT'):
     #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print path_patients
+    print (path_patients)
     patients = os.listdir(path_patients)#every file  is a hdf5 patient
     while True:
         
         for idx,namepatient in enumerate(patients):
-            print namepatient            
+            print (namepatient)            
             f=h5py.File(os.path.join(path_patients,namepatient))
             dataMRptr=f[inputKey]
             dataMR=dataMRptr.value
@@ -399,7 +399,7 @@ def Generator_3D_patches(path_patients,batchsize, inputKey='dataMR',outputKey='d
 
             dataMR=np.squeeze(dataMR)
             dataCT=np.squeeze(dataCT)
-            print 'mr shape h5 ',dataMR.shape
+            print ('mr shape h5 ',dataMR.shape)
 
             
             shapedata=dataMR.shape
@@ -429,8 +429,8 @@ def Generator_3D_patches(path_patients,batchsize, inputKey='dataMR',outputKey='d
             y=np.expand_dims(y, axis=4)
             y=y.astype(np.float32)
             
-            print 'y shape ', y.shape
-            print 'X shape ', X.shape
+            print ('y shape ', y.shape)
+            print ('X shape ', X.shape)
                              
             for i_batch in xrange(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
@@ -440,7 +440,7 @@ def Generator_3D_patches(path_patients,batchsize, inputKey='dataMR',outputKey='d
     I think this can only goes into the 1st space, instead of recursive initialization
  '''
 def weights_init(m):
-    xavier=torch.nn.init.xavier_uniform
+    xavier=torch.nn.init.xavier_uniform_
     classname = m.__class__.__name__
     if classname.find('Conv') != -1:
 #         m.weight.data.normal_(0.0, 0.02)
@@ -487,13 +487,13 @@ output:
     psnr
 '''
 def psnr(ct_generated,ct_GT):
-    print ct_generated.shape
-    print ct_GT.shape
+    print (ct_generated.shape)
+    print (ct_GT.shape)
 
     mse=np.sqrt(np.mean((ct_generated-ct_GT)**2))
-    print 'mse ',mse
+    print ('mse ',mse)
     max_I=np.max([np.max(ct_generated),np.max(ct_GT)])
-    print 'max_I ',max_I
+    print ('max_I ',max_I)
     return 20.0*np.log10(max_I/mse)
 
 '''
@@ -701,9 +701,9 @@ def testOneSubject_aver_res(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, m
     margin3 = int((dFA[2]-dSeg[2])/2)
     cubicCnt = 0
     marginD = [margin1,margin2,margin3]
-    print 'matFA shape is ',matFA.shape
+    print ('matFA shape is ',matFA.shape)
     matFAOut = np.zeros([row+2*marginD[0],col+2*marginD[1],leng+2*marginD[2]])
-    print 'matFAOut shape is ',matFAOut.shape
+    print ('matFAOut shape is ',matFAOut.shape)
     matFAOut[marginD[0]:row+marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA
 
     matFAOut[0:marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA[0:marginD[0],:,:] #we'd better flip it along the first dimension
@@ -719,7 +719,7 @@ def testOneSubject_aver_res(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, m
     matOut = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))
     used = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))+eps
     #fid=open('trainxxx_list.txt','a');
-    print 'last i ',row-dSeg[0]
+    print ('last i ',row-dSeg[0])
     for i in range(0,row-dSeg[0]+1,step[0]):
 #         print 'i ',i
         for j in range(0,col-dSeg[1]+1,step[1]):
@@ -774,9 +774,9 @@ def testOneSubject_aver_res_multiModal(FA_image, MR_image, CT_GT,MR_patch_sz,CT_
     margin3 = int((dFA[2]-dSeg[2])/2)
     cubicCnt = 0
     marginD = [margin1,margin2,margin3]
-    print 'matFA shape is ',matFA.shape
+    print ('matFA shape is ',matFA.shape)
     matFAOut = np.zeros([row+2*marginD[0],col+2*marginD[1],leng+2*marginD[2]])
-    print 'matFAOut shape is ',matFAOut.shape
+    print ('matFAOut shape is ',matFAOut.shape)
     matFAOut[marginD[0]:row+marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA
 
     matFAOut[0:marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA[0:marginD[0],:,:] #we'd better flip it along the first dimension
@@ -789,7 +789,7 @@ def testOneSubject_aver_res_multiModal(FA_image, MR_image, CT_GT,MR_patch_sz,CT_
     matFAOut[marginD[0]:row+marginD[0],marginD[1]:col+marginD[1],marginD[2]+leng:matFAOut.shape[2]] = matFA[:,:,leng-marginD[2]:matFA.shape[2]]
 
     matMROut = np.zeros([row+2*marginD[0],col+2*marginD[1],leng+2*marginD[2]])
-    print 'matMROut shape is ',matMROut.shape
+    print ('matMROut shape is ',matMROut.shape)
     matMROut[marginD[0]:row+marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matMR
 
     matMROut[0:marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matMR[0:marginD[0],:,:] #we'd better flip it along the first dimension
@@ -805,7 +805,7 @@ def testOneSubject_aver_res_multiModal(FA_image, MR_image, CT_GT,MR_patch_sz,CT_
     matOut = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))
     used = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))+eps
     #fid=open('trainxxx_list.txt','a');
-    print 'last i ',row-dSeg[0]
+    print ('last i ',row-dSeg[0])
     for i in range(0,row-dSeg[0]+1,step[0]):
 #         print 'i ',i
         for j in range(0,col-dSeg[1]+1,step[1]):
@@ -861,9 +861,9 @@ def testOneSubject_aver(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, model
     margin3 = int((dFA[2]-dSeg[2])/2)
     cubicCnt = 0
     marginD = [margin1,margin2,margin3]
-    print 'matFA shape is ',matFA.shape
+    print ('matFA shape is ',matFA.shape)
     matFAOut = np.zeros([row+2*marginD[0],col+2*marginD[1],leng+2*marginD[2]])
-    print 'matFAOut shape is ',matFAOut.shape
+    print ('matFAOut shape is ',matFAOut.shape)
     matFAOut[marginD[0]:row+marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA
     
     matFAOut[0:marginD[0],marginD[1]:col+marginD[1],marginD[2]:leng+marginD[2]] = matFA[0:marginD[0],:,:] #we'd better flip it along the first dimension
@@ -879,7 +879,7 @@ def testOneSubject_aver(MR_image,CT_GT,MR_patch_sz,CT_patch_sz,step, netG, model
     matOut = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))
     used = np.zeros((matSeg.shape[0],matSeg.shape[1],matSeg.shape[2]))+eps
     #fid=open('trainxxx_list.txt','a');
-    print 'last i ',row-dSeg[0]
+    print ('last i ',row-dSeg[0])
     for i in range(0,row-dSeg[0]+1,step[0]):
 #         print 'i ',i
         for j in range(0,col-dSeg[1]+1,step[1]):
@@ -937,14 +937,14 @@ def testOneSubject_aver_MultiModal(FA_image, MR_image, CT_GT, MR_patch_sz, CT_pa
     margin3 = int((dFA[2] - dSeg[2]) / 2)
     cubicCnt = 0
     marginD = [margin1, margin2, margin3]
-    print 'matFA shape is ', matFA.shape
+    print ('matFA shape is ', matFA.shape)
     matFAOut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]])
-    print 'matFAOut shape is ', matFAOut.shape
+    print ('matFAOut shape is ', matFAOut.shape)
     matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA
 
-    print 'matMR shape is ', matMR.shape
+    print ('matMR shape is ', matMR.shape)
     matMROut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]])
-    print 'matMROut shape is ', matMROut.shape
+    print ('matMROut shape is ', matMROut.shape)
     matMROut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matMR
 
     ## matFA
@@ -981,7 +981,7 @@ def testOneSubject_aver_MultiModal(FA_image, MR_image, CT_GT, MR_patch_sz, CT_pa
     matOut = np.zeros((matSeg.shape[0], matSeg.shape[1], matSeg.shape[2]))
     used = np.zeros((matSeg.shape[0], matSeg.shape[1], matSeg.shape[2])) + eps
     # fid=open('trainxxx_list.txt','a');
-    print 'last i ', row - dSeg[0]
+    print ('last i ', row - dSeg[0])
     for i in range(0, row - dSeg[0] + 1, step[0]):
         #         print 'i ',i
         for j in range(0, col - dSeg[1] + 1, step[1]):
