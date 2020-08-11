@@ -40,9 +40,9 @@ parser.add_argument("--adImportance", type=float, default=0, help="Sample import
 parser.add_argument("--isFixedRegions", action="store_true", help="Is the organ regions roughly known?", default=False)
 #parser.add_argument("--modelPath", default="/home/niedong/Data4LowDosePET/pytorch_UNet/model/resunet2d_pet_Aug_noNorm_lres_bn_lr5e3_base1_lossL1_0p01_0624_200000.pt", type=str, help="prefix of the to-be-saved model name")
 # parser.add_argument("--modelPath", default="/shenlab/lab_stor5/dongnie/brain_mr2ct/modelFiles/resunet2d_dp_brain_BatchAug_sNorm_lres_bn_lr5e3_lrnetD5e3_lrdec_base1_wgan_gp_1107_140000.pt", type=str, help="prefix of the to-be-saved model name")
-parser.add_argument("--modelPath", default="/shenlab/lab_stor/dongnie/brats2018/modelFiles/resunet2d_dp_brats_BatchAug_sNorm_bn_lr5e3_lrnetD5e3_lrdec0p5_lrDdec0p05_wgan_gp_1112_200000.pt", type=str, help="prefix of the to-be-saved model name")
+parser.add_argument("--modelPath", default="./Model/model100.pt", type=str, help="prefix of the to-be-saved model name")
 # parser.add_argument("--prefixPredictedFN", default="/shenlab/lab_stor5/dongnie/brain_mr2ct/res/testResult/predCT_brain_resunet2d_dp_Aug_sNorm_lres_lrdce_bn_lr5e3_lossL1_1107_14w_", type=str, help="prefix of the to-be-saved predicted filename")
-parser.add_argument("--prefixPredictedFN", default="/shenlab/lab_stor/dongnie/brats2018/res/testResult/predBrats_v1_resunet2d_dp_Aug_sNorm_lres_lrdce_bn_lr5e3_lossL1_1112_20w_", type=str, help="prefix of the to-be-saved predicted filename")
+parser.add_argument("--prefixPredictedFN", default="./PredictedFN/", type=str, help="prefix of the to-be-saved predicted filename")
 parser.add_argument("--how2normalize", type=int, default=6, help="how to normalize the data")
 parser.add_argument("--resType", type=int, default=1, help="resType: 0: segmentation map (integer); 1: regression map (continuous); 2: segmentation map + probability map")
 
@@ -51,11 +51,9 @@ opt = parser.parse_args()
 
 
 def main():
-    print opt
+    print(opt)
 
-    path_test = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
-    path_test = '/shenlab/lab_stor5/dongnie/brain_mr2ct/original_data/'
-    path_test = '/shenlab/lab_stor/dongnie/brats2018/TrainData/HGG/Brats18_2013_11_1'
+    path_test = './Dataset'
     
     if opt.whichNet==1:
         netG = UNet(in_channel=opt.numOfChannel_allSource, n_classes=1)
@@ -78,7 +76,7 @@ def main():
 
     ids = ['1_QFZ','2_LLQ','3_LMB','4_ZSL','5_CJB','11_TCL','15_WYL','21_PY','25_LYL','31_CZX','35_WLL','41_WQC','45_YXM']
     ids = [2,3,4,5,8,9,10,13]
-    ids = ['Brats18_2013_11_1']
+    ids = ['Prediction']
     for ind in ids:
         start = time.time()
 
@@ -86,8 +84,8 @@ def main():
         # ct_test_itk = sitk.ReadImage(os.path.join(path_test,'sub%d_ct.hdr'%ind))#auxialliary modality
         # hpet_test_itk = sitk.ReadImage(os.path.join(path_test, 'sub%d_ct.hdr'%ind))#output modality
 
-        mr_test_itk = sitk.ReadImage(os.path.join(path_test, 'Brats18_2013_11_1_t1ce.nii.gz'))
-        ct_test_itk = sitk.ReadImage(os.path.join(path_test, 'Brats18_2013_11_1_t2.nii.gz'))
+        mr_test_itk = sitk.ReadImage(os.path.join(path_test, 'd1_mr.nii'))
+        ct_test_itk = sitk.ReadImage(os.path.join(path_test, 'd2_ct.nii'))
 
         spacing = mr_test_itk.GetSpacing()
         origin = mr_test_itk.GetOrigin()
@@ -112,22 +110,22 @@ def main():
         # for training data in pelvicSeg
         if opt.how2normalize == 1:
             maxV, minV = np.percentile(mrnp, [99, 1])
-            print 'maxV,', maxV, ' minV, ', minV
+            print('maxV,', maxV, ' minV, ', minV)
             mrnp = (mrnp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(ctnp)
+            print('unique value: ', np.unique(ctnp))
 
         # for training data in pelvicSeg
         if opt.how2normalize == 2:
             maxV, minV = np.percentile(mrnp, [99, 1])
-            print 'maxV,', maxV, ' minV, ', minV
+            print('maxV,', maxV, ' minV, ', minV)
             mrnp = (mrnp - mu) / (maxV - minV)
-            print 'unique value: ', np.unique(ctnp)
+            print('unique value: ', np.unique(ctnp))
 
         # for training data in pelvicSegRegH5
         if opt.how2normalize == 3:
             std = np.std(mrnp)
             mrnp = (mrnp - mu) / std
-            print 'maxV,', np.ndarray.max(mrnp), ' minV, ', np.ndarray.min(mrnp)
+            print('maxV,', np.ndarray.max(mrnp), ' minV, ', np.ndarray.min(mrnp))
 
         if opt.how2normalize == 4:
             maxLPET = 149.366742
@@ -163,7 +161,7 @@ def main():
             meanCT = -601.1929
             stdCT = 475.034
 
-            print 'ct, max: ', np.amax(ctnp), ' ct, min: ', np.amin(ctnp)
+            print('ct, max: ', np.amax(ctnp), ' ct, min: ', np.amin(ctnp))
 
             # matLPET = (mrnp - meanLPET) / (stdLPET)
             matLPET = mrnp
@@ -173,12 +171,13 @@ def main():
         if opt.how2normalize == 6:
             maxPercentPET, minPercentPET = np.percentile(mrnp, [99.5, 0])
             maxPercentCT, minPercentCT = np.percentile(ctnp, [99.5, 0])
-            print 'maxPercentPET: ', maxPercentPET, ' minPercentPET: ', minPercentPET, ' maxPercentCT: ', maxPercentCT, 'minPercentCT: ', minPercentCT
+            print('maxPercentPET: ', maxPercentPET, ' minPercentPET: ', minPercentPET, ' maxPercentCT: ', maxPercentCT,
+                  'minPercentCT: ', minPercentCT)
 
             matLPET = (mrnp - minPercentPET) / (maxPercentPET - minPercentPET)
-			matCT = (ctnp - minPercentCT) / (maxPercentCT - minPercentCT)
-			if opt.isMultiSource:
-				matSPET = (hpetnp - minPercentPET) / (maxPercentPET - minPercentPET)
+            matCT = (ctnp - minPercentCT) / (maxPercentCT - minPercentCT)
+            if opt.isMultiSource:
+                matSPET = (hpetnp - minPercentPET) / (maxPercentPET - minPercentPET)
 
             
 
@@ -186,7 +185,8 @@ def main():
             matFA = matLPET
             matGT = hpetnp
 
-            print 'matFA shape: ', matFA.shape, ' matGT shape: ', matGT.shape,' max(matFA): ',np.amax(matFA),' min(matFA): ',np.amin(matFA)
+            print('matFA shape: ', matFA.shape, ' matGT shape: ', matGT.shape, ' max(matFA): ', np.amax(matFA),
+                  ' min(matFA): ', np.amin(matFA))
             # matOut = testOneSubject_aver_res(matFA, matGT, [5, 64, 64], [1, 64, 64], [1, 16, 16], netG, opt.modelPath)
             if opt.whichNet == 3 or opt.whichNet == 4:
                 matOut = testOneSubject_aver_res(matFA, matGT, [5, 64, 64], [1, 64, 64], [1, 32, 32], netG,
@@ -194,7 +194,7 @@ def main():
             else:
                 matOut = testOneSubject_aver(matFA, matGT, [5, 64, 64], [1, 64, 64], [1, 32, 32], netG,
                                              opt.modelPath)
-            print 'matOut shape: ', matOut.shape, ' max(matOut): ',np.amax(matOut),' min(matOut): ',np.amin(matOut)
+            print('matOut shape: ', matOut.shape, ' max(matOut): ', np.amax(matOut), ' min(matOut): ', np.amin(matOut))
             if opt.how2normalize == 6:
                 # ct_estimated = matOut * (maxPercentPET - minPercentPET) + minPercentPET
                 ct_estimated = matOut * (maxPercentCT - minPercentCT) + minPercentCT
@@ -203,9 +203,9 @@ def main():
             #ct_estimated[np.where(mrnp==0)] = 0
             itspsnr = psnr(ct_estimated, matGT)
 
-            print 'pred: ', ct_estimated.dtype, ' shape: ', ct_estimated.shape
-            print 'gt: ', ctnp.dtype, ' shape: ', matGT.shape
-            print 'psnr = ', itspsnr
+            print('pred: ', ct_estimated.dtype, ' shape: ', ct_estimated.shape)
+            print('gt: ', ctnp.dtype, ' shape: ', matGT.shape)
+            print('psnr = ', itspsnr)
             volout = sitk.GetImageFromArray(ct_estimated)
             volout.SetSpacing(spacing)
             volout.SetOrigin(origin)
@@ -214,7 +214,7 @@ def main():
         else:
             matFA = matLPET
             matGT = hpetnp
-            print 'matFA shape: ', matFA.shape, ' matGT shape: ', matGT.shape
+            print('matFA shape: ', matFA.shape, ' matGT shape: ', matGT.shape)
             # matOut = testOneSubject_aver_res_multiModal(matFA, matCT, matGT, [5, 64, 64], [1, 64, 64], [1, 16, 16], netG, opt.modelPath)
             if opt.whichNet == 3 or opt.whichNet == 4:
                 matOut = testOneSubject_aver_res_multiModal(matFA, matCT, matGT, [5, 64, 64], [1, 64, 64], [1, 32, 32], netG,
@@ -222,7 +222,7 @@ def main():
             else:
                 matOut = testOneSubject_aver_MultiModal(matFA, matCT, matGT, [5, 64, 64], [1, 64, 64], [1, 32, 32], netG,
                                                     opt.modelPath)
-            print 'matOut shape: ', matOut.shape
+            print('matOut shape: ', matOut.shape)
             if opt.how2normalize == 6:
                 ct_estimated = matOut * (maxPercentPET - minPercentPET) + minPercentPET
             else:
@@ -231,9 +231,9 @@ def main():
             #ct_estimated[np.where(mrnp==0)] = 0
             itspsnr = psnr(ct_estimated, matGT)
 
-            print 'pred: ', ct_estimated.dtype, ' shape: ', ct_estimated.shape
-            print 'gt: ', ctnp.dtype, ' shape: ', ct_estimated.shape
-            print 'psnr = ', itspsnr
+            print('pred: ', ct_estimated.dtype, ' shape: ', ct_estimated.shape)
+            print('gt: ', ctnp.dtype, ' shape: ', ct_estimated.shape)
+            print('psnr = ', itspsnr)
             volout = sitk.GetImageFromArray(ct_estimated)
             volout.SetSpacing(spacing)
             volout.SetOrigin(origin)
@@ -242,5 +242,5 @@ def main():
 
 if __name__ == '__main__':
 #     testGradients()
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(opt.gpuID)
+    os.environ['CUDA_VISIBLE_DEVICES'] = "0" # str(opt.gpuID)
     main()

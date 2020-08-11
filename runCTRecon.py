@@ -38,9 +38,9 @@ parser.add_argument("--numOfChannel_singleSource", type=int, default=5,
                     help="# of channels for a 2D patch for the main modality (Default, 5)")
 parser.add_argument("--numOfChannel_allSource", type=int, default=5,
                     help="# of channels for a 2D patch for all the concatenated modalities (Default, 5)")
-parser.add_argument("--numofIters", type=int, default=200000, help="number of iterations to train for")
+parser.add_argument("--numofIters", type=int, default=100, help="number of iterations to train for")
 parser.add_argument("--showTrainLossEvery", type=int, default=100, help="number of iterations to show train loss")
-parser.add_argument("--saveModelEvery", type=int, default=5000, help="number of iterations to save the model")
+parser.add_argument("--saveModelEvery", type=int, default=100, help="number of iterations to save the model")
 parser.add_argument("--showValPerformanceEvery", type=int, default=1000,
                     help="number of iterations to show validation performance")
 parser.add_argument("--showTestPerformanceEvery", type=int, default=5000,
@@ -62,9 +62,7 @@ parser.add_argument("--momentum", default=0.9, type=float, help="Momentum, Defau
 parser.add_argument("--weight-decay", "--wd", default=1e-4, type=float, help="weight decay, Default: 1e-4")
 parser.add_argument("--RT_th", default=0.005, type=float, help="Relative thresholding: 0.005")
 parser.add_argument("--pretrained", default="", type=str, help="path to pretrained model (default: none)")
-parser.add_argument("--prefixModelName",
-                    default="/home/niedong/Data4LowDosePET/pytorch_UNet/resunet2d_dp_pet_BatchAug_sNorm_lres_bn_lr5e3_lrdec_base1_lossL1_lossGDL0p05_0705_",
-                    type=str, help="prefix of the to-be-saved model name")
+parser.add_argument("--prefixModelName", default="./Model/model", type=str, help="prefix of the to-be-saved model name")
 parser.add_argument("--prefixPredictedFN",
                     default="preSub1_pet_BatchAug_sNorm_resunet_dp_lres_bn_lr5e3_lrdec_base1_lossL1_lossGDL0p05_0705_",
                     type=str, help="prefix of the to-be-saved predicted filename")
