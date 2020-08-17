@@ -138,9 +138,9 @@ def main():
     #     inputs=torch.randn(1000,1,32,32)
     #     targets=torch.LongTensor(1000)
 
-    path_test ='./TrainingSet'
-    path_patients_h5 = './TrainingSet'
-    path_patients_h5_val ='./ValidationSet'
+    path_test = 'Dataset/Training'
+    path_patients_h5 = './TrainingSet/'
+    path_patients_h5_val = './ValidationSet/'
     #     batch_size=10
     # data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='data3T',outputKey='data7T')
     # data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='data3T',outputKey='data7T')
@@ -415,7 +415,7 @@ def main():
                 adjust_learning_rate(optimizerD, opt.lr_netD)
 
         if iter % opt.showValPerformanceEvery == 0:  # test one subject
-            # to test on the validation dataset in the format of h5 
+            # to test on the validation dataset in the format of h5
             #            inputs,exinputs,labels = data_generator_test.next()
             if opt.isMultiSource:
                 inputs, exinputs, labels = data_generator.__next__()

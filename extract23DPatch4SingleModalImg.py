@@ -89,7 +89,7 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
     cubicCnt = 0
     marginD = [margin1, margin2, margin3]
     print('matFA shape is ', matFA.shape)
-    matFAOut = np.zeros([int(row + 2 * marginD[0]), int(col + 2 * marginD[1]), int(leng + 2 * marginD[2])], dtype=np.float16)
+    matFAOut = np.zeros([row + 2 * marginD[0], col + 2 * marginD[1], leng + 2 * marginD[2]], dtype=np.float16)
     print('matFAOut shape is ', matFAOut.shape)
     matFAOut[marginD[0]:row + marginD[0], marginD[1]:col + marginD[1], marginD[2]:leng + marginD[2]] = matFA
 
@@ -202,11 +202,11 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
 
 
 def main():
-    global matSource, matTarget
     print(opt)
-    # path = '/home/niedong/Data4LowDosePET/data_niigz_scale/'
-    path = './Dataset/' # path to the data, change to your own path
-    scan = ScanFile(path, postfix='_mr.nii') # the specify item for your files, change to your own style
+
+    # path = '/home/niedong/Data4LowDosePET/data_pnggz_scale/'
+    path = 'Dataset/Training'  # path to the data, change to your own path
+    scan = ScanFile(path, postfix='_t1ce.nii') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 
     # for input
@@ -228,7 +228,7 @@ def main():
         print('source filename: ', filename)
 
         source_fn = filename
-        target_fn = filename.replace('_mr.nii', '_ct.nii')
+        target_fn = filename.replace('_t1ce.nii', '_t2.nii')
 
         imgOrg = sitk.ReadImage(source_fn)
         sourcenp = sitk.GetArrayFromImage(imgOrg)
@@ -352,7 +352,7 @@ def main():
         print('words are, ', words)
         # ind = int(words[0])
 
-        fileID = words[0]
+        fileID = words[2]
         rate = 1
         cubicCnt = extractPatch4OneSubject(matSource, matTarget, maskimg, fileID, dSeg, step, rate)
         # cubicCnt = extractPatch4OneSubject(mrnp, matCT, hpetnp, maskimg, fileID,dSeg,step,rate)
@@ -363,7 +363,7 @@ def main():
         rmatTarget = matTarget[matTarget.shape[0] - 1::-1, :, :]
 
         rmaskimg = maskimg[maskimg.shape[0] - 1::-1, :, :]
-        fileID = words[0] + 'r'
+        fileID = words[2] + 'r'
         cubicCnt = extractPatch4OneSubject(rmatSource, rmatTarget, rmaskimg, fileID, dSeg, step, rate)
         print('# of patches is ', cubicCnt)
 

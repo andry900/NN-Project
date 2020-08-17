@@ -45,8 +45,8 @@ class ScanFile(object):
     
 
 def main():
-    path='/home/dongnie/warehouse/pelvicSeg/newData/pelvic_0118/'
-    subpath='atkinson_lafayette'
+    path='C:/Users/andre/Downloads/MR/'
+    subpath=''
     outfn=subpath+'.nii.gz'
     inputdir=path+subpath
     scan=ScanFile(path)  
@@ -54,13 +54,13 @@ def main():
     for subdir in subdirs:
         if subdir==path or subdir=='..':
             continue
-        
-        print 'subdir is, ',subdir
-        
+
+        print('subdir is, ', subdir)
+
         ss=subdir.split('/')
-        print 'ss is, ',ss, 'and s7 is, ',ss[7]
-        
-        outfn=ss[7]+'.nii.gz'
+        print('ss is, ', ss, 'and s7 is, ', ss[5])
+
+        outfn=ss[5]+'.nii.gz'
         
         reader = sitk.ImageSeriesReader()
 
