@@ -53,7 +53,7 @@ opt = parser.parse_args()
 def main():
     print(opt)
 
-    path_test = 'Dataset/Validation'
+    path_test = 'Dataset/Test'
     
     if opt.whichNet==1:
         netG = UNet(in_channel=opt.numOfChannel_allSource, n_classes=1)
@@ -78,12 +78,12 @@ def main():
     ids = [2,3,4,5,8,9,10,13]
     # ids = ['Prediction']
 
-    ids = [1, 2]
+    ids = [300, 301]
     for ind in ids:
         start = time.time()
 
-        mr_test_itk = sitk.ReadImage(os.path.join(path_test,'BraTS20_Validation_00%d_t1ce.nii'%ind))#input modality
-        ct_test_itk = sitk.ReadImage(os.path.join(path_test,'BraTS20_Validation_00%d_t2.nii'%ind))#auxialliary modality
+        mr_test_itk = sitk.ReadImage(os.path.join(path_test, 'BraTS20_Training_%d_t1ce.nii' % ind))  # input modality
+        ct_test_itk = sitk.ReadImage(os.path.join(path_test, 'BraTS20_Training_%d_t2.nii' % ind))  # auxialliary modality
         # hpet_test_itk = sitk.ReadImage(os.path.join(path_test, 'sub%d_ct.nii'%ind))#output modality
 
         # mr_test_itk = sitk.ReadImage(os.path.join(path_test, '0000_mr.nii'))

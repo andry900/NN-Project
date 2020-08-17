@@ -138,7 +138,7 @@ def main():
     #     inputs=torch.randn(1000,1,32,32)
     #     targets=torch.LongTensor(1000)
 
-    path_test = 'Dataset/Training'
+    path_test = 'Dataset/Test'
     path_patients_h5 = './TrainingSet/'
     path_patients_h5_val = './ValidationSet/'
     #     batch_size=10

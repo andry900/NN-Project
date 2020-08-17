@@ -192,12 +192,12 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
     trainFA = trainFA[0:cubicCnt, :, :, :, :]
     trainSeg = trainSeg[0:cubicCnt, :, :, :, :]
 
-    with h5py.File('./trainMRCT_snorm_64_%s.h5' % fileID, 'w') as f:
+    with h5py.File('./ValidationSet/%s.h5' % fileID, 'w') as f:
         f['dataMR'] = trainFA
         f['dataCT'] = trainSeg
 
-    with open('./trainMRCT2D_snorm_64_list.txt', 'a') as f:
-        f.write('./trainMRCT_snorm_64_%s.h5\n' % fileID)
+    with open('./H5list.txt', 'a') as f:
+        f.write('./ValidationSet/%s.h5\n' % fileID)
     return cubicCnt
 
 
@@ -205,7 +205,7 @@ def main():
     print(opt)
 
     # path = '/home/niedong/Data4LowDosePET/data_pnggz_scale/'
-    path = 'Dataset/Training'  # path to the data, change to your own path
+    path = 'Dataset/Validation'  # path to the data, change to your own path
     scan = ScanFile(path, postfix='_t1ce.nii') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 
@@ -352,7 +352,7 @@ def main():
         print('words are, ', words)
         # ind = int(words[0])
 
-        fileID = words[2]
+        fileID = words[1] + "_" + words[2]
         rate = 1
         cubicCnt = extractPatch4OneSubject(matSource, matTarget, maskimg, fileID, dSeg, step, rate)
         # cubicCnt = extractPatch4OneSubject(mrnp, matCT, hpetnp, maskimg, fileID,dSeg,step,rate)
@@ -363,7 +363,7 @@ def main():
         rmatTarget = matTarget[matTarget.shape[0] - 1::-1, :, :]
 
         rmaskimg = maskimg[maskimg.shape[0] - 1::-1, :, :]
-        fileID = words[2] + 'r'
+        fileID = words[1] + "_" + words[2] + 'r'
         cubicCnt = extractPatch4OneSubject(rmatSource, rmatTarget, rmaskimg, fileID, dSeg, step, rate)
         print('# of patches is ', cubicCnt)
 
