@@ -18,12 +18,12 @@ import gauss
 #Dong add keys here
 def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dataCT'):
     #path_patients='/home/dongnie/warehouse/CT_patients/test_set/'
-    print (path_patients)
+    print("Path: " + path_patients)
     patients = os.listdir(path_patients)#every file  is a hdf5 patient
     while True:
         
-        for idx,namepatient in enumerate(patients):
-            print (namepatient)            
+        for idx, namepatient in enumerate(patients):
+            print("File name: " + namepatient)
             f=h5py.File(os.path.join(path_patients,namepatient),'r')
             #dataMRptr=f['dataMR']
             dataMRptr=f[inputKey]
@@ -73,7 +73,7 @@ def Generator_2D_slices(path_patients,batchsize,inputKey='dataMR',outputKey='dat
             X=X[inds,...]
             y=y[inds,...]
             
-            print ('y shape ', y.shape)                   
+            print ('y shape: ', y.shape)
             for i_batch in range(int(X.shape[0]/batchsize)):
                 yield (X[i_batch*batchsize:(i_batch+1)*batchsize,...],  y[i_batch*batchsize:(i_batch+1)*batchsize,...])
 

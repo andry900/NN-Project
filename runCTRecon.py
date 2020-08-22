@@ -38,10 +38,10 @@ parser.add_argument("--numOfChannel_singleSource", type=int, default=5,
                     help="# of channels for a 2D patch for the main modality (Default, 5)")
 parser.add_argument("--numOfChannel_allSource", type=int, default=5,
                     help="# of channels for a 2D patch for all the concatenated modalities (Default, 5)")
-parser.add_argument("--numofIters", type=int, default=100, help="number of iterations to train for")
-parser.add_argument("--showTrainLossEvery", type=int, default=100, help="number of iterations to show train loss")
-parser.add_argument("--saveModelEvery", type=int, default=100, help="number of iterations to save the model")
-parser.add_argument("--showValPerformanceEvery", type=int, default=1000,
+parser.add_argument("--numofIters", type=int, default=3810, help="number of iterations to train for")
+parser.add_argument("--showTrainLossEvery", type=int, default=381, help="number of iterations to show train loss")
+parser.add_argument("--saveModelEvery", type=int, default=3810, help="number of iterations to save the model")
+parser.add_argument("--showValPerformanceEvery", type=int, default=5000,
                     help="number of iterations to show validation performance")
 parser.add_argument("--showTestPerformanceEvery", type=int, default=5000,
                     help="number of iterations to show test performance")
@@ -108,10 +108,8 @@ def main():
     # net.apply(weights_init)
     net.cuda()
     params = list(net.parameters())
-    print('len of params is ')
-    print(len(params))
-    print('size of params is ')
-    print(params[0].size())
+    print('len of params is: ' + str(len(params)))
+    print('size of params is: ' + str(params[0].size()))
 
     optimizer = optim.Adam(net.parameters(), lr=opt.lr)
     criterion_L2 = nn.MSELoss()
@@ -140,19 +138,20 @@ def main():
 
     path_test = 'Dataset/Test'
     path_patients_h5 = './TrainingSet/'
-    path_patients_h5_val = './ValidationSet/'
+    # path_patients_h5_val = './ValidationSet/'
+
     #     batch_size=10
     # data_generator = Generator_2D_slices(path_patients_h5,opt.batchSize,inputKey='data3T',outputKey='data7T')
     # data_generator_test = Generator_2D_slices(path_patients_h5_test,opt.batchSize,inputKey='data3T',outputKey='data7T')
     if opt.isMultiSource:
         data_generator = Generator_2D_slicesV1(path_patients_h5, opt.batchSize, inputKey='dataLPET', segKey='dataCT',
                                                contourKey='dataHPET')
-        data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET',
-                                                    segKey='dataCT', contourKey='dataHPET')
+        # data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET',
+        #                                            segKey='dataCT', contourKey='dataHPET')
     else:
         data_generator = Generator_2D_slices(path_patients_h5, opt.batchSize, inputKey='dataMR', outputKey='dataCT')
-        data_generator_test = Generator_2D_slices(path_patients_h5_val, opt.batchSize, inputKey='dataMR',
-                                                  outputKey='dataCT')
+        # data_generator_test = Generator_2D_slices(path_patients_h5_val, opt.batchSize, inputKey='dataMR',
+        #                                          outputKey='dataCT')
 
     # data_generator = Generator_2D_slicesV1(path_patients_h5,opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')
     # data_generator_test = Generator_2D_slicesV1(path_patients_h5_val, opt.batchSize, inputKey='dataLPET', segKey='dataCT', contourKey='dataHPET')

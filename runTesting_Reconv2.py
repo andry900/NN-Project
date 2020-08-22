@@ -40,9 +40,9 @@ parser.add_argument("--adImportance", type=float, default=0, help="Sample import
 parser.add_argument("--isFixedRegions", action="store_true", help="Is the organ regions roughly known?", default=False)
 #parser.add_argument("--modelPath", default="/home/niedong/Data4LowDosePET/pytorch_UNet/model/resunet2d_pet_Aug_noNorm_lres_bn_lr5e3_base1_lossL1_0p01_0624_200000.pt", type=str, help="prefix of the to-be-saved model name")
 # parser.add_argument("--modelPath", default="/shenlab/lab_stor5/dongnie/brain_mr2ct/modelFiles/resunet2d_dp_brain_BatchAug_sNorm_lres_bn_lr5e3_lrnetD5e3_lrdec_base1_wgan_gp_1107_140000.pt", type=str, help="prefix of the to-be-saved model name")
-parser.add_argument("--modelPath", default="./Model/model100.pt", type=str, help="prefix of the to-be-saved model name")
+parser.add_argument("--modelPath", default="./Model/model3810.pt", type=str, help="prefix of the to-be-saved model name")
 # parser.add_argument("--prefixPredictedFN", default="/shenlab/lab_stor5/dongnie/brain_mr2ct/res/testResult/predCT_brain_resunet2d_dp_Aug_sNorm_lres_lrdce_bn_lr5e3_lossL1_1107_14w_", type=str, help="prefix of the to-be-saved predicted filename")
-parser.add_argument("--prefixPredictedFN", default="./PredictedFN/", type=str, help="prefix of the to-be-saved predicted filename")
+parser.add_argument("--prefixPredictedFN", default="./PredictedFN/Test_", type=str, help="prefix of the to-be-saved predicted filename")
 parser.add_argument("--how2normalize", type=int, default=6, help="how to normalize the data")
 parser.add_argument("--resType", type=int, default=1, help="resType: 0: segmentation map (integer); 1: regression map (continuous); 2: segmentation map + probability map")
 
@@ -55,13 +55,13 @@ def main():
 
     path_test = 'Dataset/Test'
     
-    if opt.whichNet==1:
+    if opt.whichNet == 1:
         netG = UNet(in_channel=opt.numOfChannel_allSource, n_classes=1)
-    elif opt.whichNet==2:
+    elif opt.whichNet == 2:
         netG = ResUNet(in_channel=opt.numOfChannel_allSource, n_classes=1)
-    elif opt.whichNet==3:
+    elif opt.whichNet == 3:
         netG = UNet_LRes(in_channel=opt.numOfChannel_allSource, n_classes=1)
-    elif opt.whichNet==4:
+    elif opt.whichNet == 4:
         netG = ResUNet_LRes(in_channel=opt.numOfChannel_allSource, n_classes=1)
 
     #netG.apply(weights_init)
@@ -70,15 +70,8 @@ def main():
     checkpoint = torch.load(opt.modelPath)
     netG.load_state_dict(checkpoint['model'])
 
+    ids = [351, 352, 353, 354, 355, 356, 357, 358, 359, 360]
 
-    ids = [1,6,11,16,21,26,31,36,41,46] #in on folder, we test 10 which is the testing set
-    ids = [1] #in on folder, we test 10 which is the testing set
-
-    ids = ['1_QFZ','2_LLQ','3_LMB','4_ZSL','5_CJB','11_TCL','15_WYL','21_PY','25_LYL','31_CZX','35_WLL','41_WQC','45_YXM']
-    ids = [2,3,4,5,8,9,10,13]
-    # ids = ['Prediction']
-
-    ids = [300, 301]
     for ind in ids:
         start = time.time()
 
