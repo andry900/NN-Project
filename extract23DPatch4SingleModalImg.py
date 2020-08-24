@@ -192,12 +192,12 @@ def extractPatch4OneSubject(matFA, matSeg, matMask, fileID, d, step, rate):
     trainFA = trainFA[0:cubicCnt, :, :, :, :]
     trainSeg = trainSeg[0:cubicCnt, :, :, :, :]
 
-    with h5py.File('./ValidationSet/%s.h5' % fileID, 'w') as f:
+    with h5py.File('./TrainingSet/%s.h5' % fileID, 'w') as f:
         f['dataMR'] = trainFA
         f['dataCT'] = trainSeg
 
     with open('./H5list.txt', 'a') as f:
-        f.write('./ValidationSet/%s.h5\n' % fileID)
+        f.write('./TrainingSet/%s.h5\n' % fileID)
     return cubicCnt
 
 
@@ -205,7 +205,7 @@ def main():
     print(opt)
 
     # path = '/home/niedong/Data4LowDosePET/data_pnggz_scale/'
-    path = 'Dataset/Validation'  # path to the data, change to your own path
+    path = 'Dataset/Training'  # path to the data, change to your own path
     scan = ScanFile(path, postfix='_t1ce.nii') # the specify item for your files, change to your own style
     filenames = scan.scan_files()
 

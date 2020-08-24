@@ -374,7 +374,7 @@ def main():
             print('time now is: ' + time.asctime(time.localtime(time.time())))
             #             print 'running loss is ',running_loss
             print('average running loss for generator between iter [%d, %d] is: %.5f' % (
-            iter - 100 + 1, iter, running_loss / 100))
+            iter - 381 + 1, iter, running_loss / 381))
 
             print('lossG_G is %.5f respectively.' % (lossG_G.data))  # [0]))
 
@@ -392,7 +392,7 @@ def main():
                 print('loss for discriminator is %f' % Wasserstein_D.data[0], ' D cost is %f' % D_cost)
                 print('lossG_D for discriminator is %f' % lossG_D.data[0])
 
-            print('cost time for iter [%d, %d] is %.2f' % (iter - 100 + 1, iter, time.time() - start))
+            print('cost time for iter [%d, %d] is %.2f' % (iter - 381 + 1, iter, time.time() - start))
             print('************************************************')
             running_loss = 0.0
             start = time.time()
